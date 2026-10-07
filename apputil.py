@@ -24,6 +24,7 @@ def survival_demographics():
         names=['pclass', 'sex', 'age_group']
     )
     grouped = grouped.set_index(['pclass', 'sex', 'age_group']).reindex(all_combinations, fill_value=0).reset_index()
+    grouped['age_group'] = pd.Categorical(grouped['age_group'], categories=age_labels, ordered=True)
 
     return grouped
 
