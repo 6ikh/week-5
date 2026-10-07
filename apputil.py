@@ -31,3 +31,33 @@ def survival_demographics():
 grouped = survival_demographics()
 
 print(grouped.head(10))
+
+def visualize_demographic():
+    grouped = survival_demographics()
+
+    males = grouped[grouped['sex'] == 'male'].copy()
+    males['survival_percent'] = males['survival_rate'] * 100
+
+    fig = px.bar(
+        males,
+        x="age_group",
+        y="survival_percent",
+        color="pclass",
+        barmode="group",
+        category_orders={"age_group": ["Child", "Teenager", "Adult", "Senior"]},
+        labels={
+            "survival_percent": "Survival Rate (%)",
+            "age_group": "Age Group",
+            "pclass": "Passenger Class"
+        },
+        title="Male Survival Rates Across Passenger Classes",
+        text_auto=".1f"
+    )
+
+    fig.update_layout(
+        yaxis_title="Survival Rate (%)",
+        legend_title="Passenger Class",
+        yaxis_range=[0, 105]
+    )
+
+    return fig
