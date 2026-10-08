@@ -15,7 +15,7 @@ st.write('How did male survival rates compare across age groups and passenger cl
 fig1 = visualize_demographic()
 st.plotly_chart(fig1, use_container_width=True)
 
-st.write(
+st.write('How did ticket fares compare for families of different sizes in 1st, 2nd, and 3rd class?'
 '''
 # Titanic Visualization 2
 '''

@@ -61,3 +61,60 @@ def visualize_demographic():
     )
 
     return fig
+
+
+def family_groups():
+    df_copy = df.copy()
+
+    df_copy['family_size'] = df_copy['sibsp'] + df_copy['parch'] + 1
+
+    grouped = df_copy.groupby(['pclass', 'family_size']).agg(
+        n_passengers=('fare', 'count'),
+        avg_fare=('fare', 'mean'),
+        min_fare=('fare', 'min'),
+        max_fare=('fare', 'max')
+    ).reset_index()
+
+    grouped = grouped.sort_values(by=['pclass', 'family_size']).reset_index(drop=True)
+
+    return grouped
+grouped = family_groups()
+
+print(grouped)
+
+
+def last_names():
+    extracted_last_names = df['name'].str.split(',').str[0].str.strip()
+    return extracted_last_names.value_counts()
+
+print(last_names())
+
+
+def visualize_families():
+    grouped = family_groups()
+
+    grouped['plclass'] = grouped['pclass'].astype(str)
+
+    fig = px.bar(
+        grouped,
+        x='family_size',
+        y='avg_fare',
+        color='pclass',
+        barmode='group',
+        category_orders={'pclass': ['1', '2', '3']},
+        labels={
+            'family_size': 'Family Size',
+            'avg_fare': 'Average Fare ($)',
+            'pclass': 'Passenger Class'
+        },
+        title='Average Ticket Fare Comparison by Family Size Across Passenger Classes',
+        text_auto='.1f'
+    )
+
+    fig.update_layout(
+        xaxis=dict(tickmode='linear', dtick=1),
+        yaxis_title='Average Fare ($)',
+        legend_title='Passenger Class'
+    )
+
+    return fig
